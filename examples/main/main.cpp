@@ -139,18 +139,22 @@ int main(int argc, char ** argv) {
         return 1;
     }
     std::ifstream inFile(filePath);
-    if (!inFile) {
-        std::cerr << "파일을 열 수 없습니다: " << filePath << std::endl;
-        // 파일 없으면 기존 프롬프트를 그대로 사용하거나, 필요 시 종료 처리
-    } else {
-        std::stringstream buffer;
-        buffer << inFile.rdbuf();
-        inFile.close();
-        std::string newPrompt = buffer.str();
-        std::cout << "파일에서 읽어온 프롬프트 내용:\n" << newPrompt << "\n";
-        // 커맨드라인에서 받은 프롬프트보다 파일의 내용을 우선 사용하도록 업데이트
-        params.prompt = newPrompt;
-    }
+    std::stringstream buffer;
+    buffer << inFile.rdbuf();
+    inFile.close();
+    std::string newPrompt = buffer.str();
+    params.prompt = newPrompt;
+    
+
+    // if (!inFile) {
+    //     std::cerr << "파일을 열 수 없습니다: " << filePath << std::endl;
+    //     // 파일 없으면 기존 프롬프트를 그대로 사용하거나, 필요 시 종료 처리
+    // } else {
+        
+    //     std::cout << "파일에서 읽어온 프롬프트 내용:\n" << newPrompt << "\n";
+    //     // 커맨드라인에서 받은 프롬프트보다 파일의 내용을 우선 사용하도록 업데이트
+        
+    // }
 
     common_init();
 
@@ -369,7 +373,11 @@ int main(int argc, char ** argv) {
         if (params.interactive_first || !prompt.empty() || session_tokens.empty()) {
             LOG_DBG("tokenize the prompt\n");
             // embd_inp = common_tokenize(ctx, prompt, true, true);
-            embd_inp = common_tokenize(ctx, "FUCK!!HELP ME!", true, true);
+            //////////////////////////////////////////////////////////////////
+
+            embd_inp = common_tokenize(ctx, newPrompt, true, true);
+
+            //////////////////////////////////////////////////////////////////
         } else {
             LOG_DBG("use session tokens\n");
             embd_inp = session_tokens;
