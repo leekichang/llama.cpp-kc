@@ -113,6 +113,21 @@ int main(int argc, char ** argv) {
         if (currentWriteTime != lastWriteTime) {
             std::cout << "파일이 변경되었습니다: " << filePath << std::endl;
             lastWriteTime = currentWriteTime;
+            std::ifstream inFile(filePath);
+            // 파일 열기에 실패했을 경우 오류 메시지 출력 후 종료
+            if (!inFile) {
+                std::cerr << "파일을 열 수 없습니다: " << filePath << std::endl;
+                return 1;
+            }
+
+            // 파일의 내용을 한 줄씩 읽어와서 출력
+            std::string line;
+            while (std::getline(inFile, line)) {
+                std::cout << line << "\n";
+            }
+
+            // 파일 닫기
+            inFile.close();
             break;
         }
     }
