@@ -372,12 +372,13 @@ int main(int argc, char ** argv) {
 
         if (params.interactive_first || !prompt.empty() || session_tokens.empty()) {
             LOG_DBG("tokenize the prompt\n");
-            // embd_inp = common_tokenize(ctx, prompt, true, true);
+            prompt += "HELLO CAN YOU ANSWER MY QUESTION ABOUT POLYSOMNOGRAM IN 3 sentences?";
+            embd_inp = common_tokenize(ctx, prompt, true, true);
             //////////////////////////////////////////////////////////////////
-            std::string new_prompt_ = "Let's assume your a doctor. From now on your going to start chatting with the patient and he/her is going to ask questions related to this Polysomnogram (PSG) Test Report.\n";
-            new_prompt_ += newPrompt;
-            new_prompt_ += "\nThis is the end of the PSG Report. Please again, don't answer to this initial prompt as this is just prior information for you for following questions. Now, the patient is going to ask you quesstions. Please, Please, Please, I beg... Answer this question in yes or no. PLEASE, DON'T REPLY TO THIS INPUT. DON'T ANSWER.  You don't need to answer this message as this is to provide you the knowledge about the patient. Again, DON'T ANSWER TO THIS PROMPT. Please just READ AND UNDERSTAND (DON'T ANSWER) the following Polysomnogram (PSG) Test Report.\n";
-            embd_inp = common_tokenize(ctx, new_prompt_, true, true);
+            // std::string new_prompt_ = "Let's assume your a doctor. From now on your going to start chatting with the patient and he/her is going to ask questions related to this Polysomnogram (PSG) Test Report.\n";
+            // new_prompt_ += newPrompt;
+            // new_prompt_ += "\nThis is the end of the PSG Report. Please again, don't answer to this initial prompt as this is just prior information for you for following questions. Now, the patient is going to ask you quesstions. Please, Please, Please, I beg... Answer this question in yes or no. PLEASE, DON'T REPLY TO THIS INPUT. DON'T ANSWER.  You don't need to answer this message as this is to provide you the knowledge about the patient. Again, DON'T ANSWER TO THIS PROMPT. Please just READ AND UNDERSTAND (DON'T ANSWER) the following Polysomnogram (PSG) Test Report.\n";
+            // embd_inp = common_tokenize(ctx, new_prompt_, true, true);
 
             //////////////////////////////////////////////////////////////////
         } else {
