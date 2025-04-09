@@ -108,7 +108,7 @@ int main(int argc, char ** argv) {
     // PSG Report extraction
     ////////////////////////////////////////////////////////////////////////////////////////////////
     const std::string queryFilePath = "../storage/documents/query.txt";
-    auto currentWriteTime = fs::last_write_time(queryFilePath);
+    auto qFileCurrentWriteTime = fs::last_write_time(queryFilePath);
 
     // 이전 수정 시각을 저장하기 위한 정적 변수 (최초 실행 시 최소값으로 초기화)
     static fs::file_time_type previousWriteTime = fs::file_time_type::min();
@@ -981,12 +981,12 @@ int main(int argc, char ** argv) {
                     }
             
                     // 현재 파일의 마지막 수정 시간 체크
-                    auto currentWriteTime_ = fs::last_write_time("../storage/documents/query.txt");
-                    if (currentWriteTime_ != lastWriteTime) {
+                    qFileCurrentWriteTime = fs::last_write_time("../storage/documents/query.txt");
+                    if (qFileCurrentWriteTime != lastWriteTime) {
                         // std::cout << "파일이 변경되었습니다: " << "../storage/documents/query.txt" << std::endl;
                         std::cout << "../storage/documents/query.txt" << std::endl;
-                        lastWriteTime = currentWriteTime_;
-                        previousWriteTime = currentWriteTime_;
+                        lastWriteTime = qFileCurrentWriteTime;
+                        previousWriteTime = qFileCurrentWriteTime;
                         std::ifstream queryFile("../storage/documents/query.txt");
                         if (queryFile.is_open()) {
                             std::stringstream ss;
