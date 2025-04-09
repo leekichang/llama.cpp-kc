@@ -372,8 +372,8 @@ int main(int argc, char ** argv) {
 
         if (params.interactive_first || !prompt.empty() || session_tokens.empty()) {
             LOG_DBG("tokenize the prompt\n");
-            prompt += "HELLO CAN YOU ANSWER MY QUESTION ABOUT POLYSOMNOGRAM IN 3 sentences?";
-            embd_inp = common_tokenize(ctx, prompt, true, true);
+            std::string new_prompt_ = "HELLO CAN YOU ANSWER MY QUESTION ABOUT POLYSOMNOGRAM IN 3 sentences?";
+            embd_inp = common_tokenize(ctx, new_prompt_, true, true);
             //////////////////////////////////////////////////////////////////
             // std::string new_prompt_ = "Let's assume your a doctor. From now on your going to start chatting with the patient and he/her is going to ask questions related to this Polysomnogram (PSG) Test Report.\n";
             // new_prompt_ += newPrompt;
