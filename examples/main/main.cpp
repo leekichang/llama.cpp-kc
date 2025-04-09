@@ -919,6 +919,7 @@ int main(int argc, char ** argv) {
             if ((n_past > 0 || waiting_for_first_input) && is_interacting) {
                 LOG_INF("WAITING HERE!\n");
                 LOG_DBG("waiting for user input\n");
+                LOG_INF("USING FILE INPUT FROM ../storage/documents/query.txt\n");
 
                 if (params.conversation_mode) {
                     LOG("\n> ");
@@ -940,11 +941,22 @@ int main(int argc, char ** argv) {
                 display = params.display_prompt;
 
                 std::string line;
-                bool another_line = true;
-                do {
-                    another_line = console::readline(line, params.multiline_input);
-                    buffer += line;
-                } while (another_line);
+                // bool another_line = true;
+                // do {
+                //     another_line = console::readline(line, params.multiline_input);
+                //     buffer += line;
+                // } while (another_line);
+
+                std::string buffer;
+                std::ifstream queryFile("../storage/documents/query.txt");
+                if (queryFile.is_open()) {
+                    std::stringstream ss;
+                    ss << queryFile.rdbuf();
+                    buffer = ss.str();
+                    queryFile.close();
+                } else {
+                    LOG_ERR("Failed to open ../storage/documents/query.txt\n");
+                }
 
                 // done taking input, reset color
                 console::set_display(console::reset);
