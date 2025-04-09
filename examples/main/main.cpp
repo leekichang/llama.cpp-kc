@@ -113,21 +113,21 @@ int main(int argc, char ** argv) {
         if (currentWriteTime != lastWriteTime) {
             std::cout << "파일이 변경되었습니다: " << filePath << std::endl;
             lastWriteTime = currentWriteTime;
-            std::ifstream inFile(filePath);
-            // 파일 열기에 실패했을 경우 오류 메시지 출력 후 종료
-            if (!inFile) {
-                std::cerr << "파일을 열 수 없습니다: " << filePath << std::endl;
-                return 1;
-            }
+            // std::ifstream inFile(filePath);
+            // // 파일 열기에 실패했을 경우 오류 메시지 출력 후 종료
+            // if (!inFile) {
+            //     std::cerr << "파일을 열 수 없습니다: " << filePath << std::endl;
+            //     return 1;
+            // }
 
-            // 파일의 내용을 한 줄씩 읽어와서 출력
-            std::string line;
-            while (std::getline(inFile, line)) {
-                std::cout << line << "\n";
-            }
+            // // 파일의 내용을 한 줄씩 읽어와서 출력
+            // std::string line;
+            // while (std::getline(inFile, line)) {
+            //     std::cout << line << "\n";
+            // }
 
-            // 파일 닫기
-            inFile.close();
+            // // 파일 닫기
+            // inFile.close();
             break;
         }
     }
@@ -391,7 +391,7 @@ int main(int argc, char ** argv) {
     }
     std::string new_prompt_ = "Please answer questions based on the following PSG report.\n";
     new_prompt_ += newPrompt;
-    new_prompt_ += "\nThis is the end of the PSG Report. Please again, don't answer to this initial prompt as this is just prior information for you for following questions. DON'T REPLY TO THIS INPUT. DON'T ANSWER. You don't need to answer this message as this is to provide you the knowledge about the patient. Please just READ AND UNDERSTAND (DON'T ANSWER) the provided Polysomnogram (PSG) Test Report. NEVER start any role playing by yourself. Are you ready to answer the questions?\n";
+    new_prompt_ += "\nThis is the end of the PSG Report. Please again, don't answer to this initial prompt as this is just prior information for you for following questions. DON'T REPLY TO THIS INPUT. DON'T ANSWER. You don't need to answer this message as this is to provide you the knowledge about the patient. Please just READ AND UNDERSTAND (DON'T ANSWER) the provided Polysomnogram (PSG) Test Report. NEVER start any role playing by yourself. Are you ready to answer the questions? Answer this question in short as possible\n";
     embd_inp = common_tokenize(ctx, new_prompt_, true, true);
     LOG_INF("FUCK1\n");
     // Should not run without any tokens
