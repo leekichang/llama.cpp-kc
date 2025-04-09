@@ -111,8 +111,8 @@ int main(int argc, char ** argv) {
     const std::string respFilePath = "../storage/documents/resp.txt";
 
     // 이전 수정 시각을 저장하기 위한 정적 변수 (최초 실행 시 최소값으로 초기화)
-    static fs::file_time_type previousWriteTime = fs::last_write_time("../storage/documents/query.txt");
-
+    static fs::file_time_type previousWriteTime = fs::last_write_time(queryFilePath);
+    auto lastQueryWriteTime = fs::last_write_time(queryFilePath);
     ///////////////////////////////////////////////////////////////////////////////////////////////
     std::string filePath = "../storage/documents/parsed_psg.txt";
     // 파일의 마지막 수정 시간 초기화
