@@ -88,7 +88,7 @@ static void sigint_handler(int signo) {
 #endif
 
 int main(int argc, char ** argv) {
-    std::string directoryPath = "../storage/downloads";
+    std::string directoryPath = "../storage/documents";
 
     // 해당 경로가 존재하는지와 디렉토리인지 확인
     if (!fs::exists(directoryPath)) {
