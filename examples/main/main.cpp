@@ -953,6 +953,7 @@ int main(int argc, char ** argv) {
                         LOG_ERR("Failed to open resp.txt for writing.");
                     }
                 }else{
+                    LOG_INF(isFirst);
                     isFirst+=1;
                 }
 
