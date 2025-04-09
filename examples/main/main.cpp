@@ -414,7 +414,7 @@ int main(int argc, char ** argv) {
     }
     std::string new_prompt_ = "Please answer questions based on the following PSG report.\n";
     new_prompt_ += newPrompt;
-    new_prompt_ += "\nThis is the end of the PSG Report. Please do not answer to this initial input as this is just information. DON'T REPLY TO THIS INPUT. You don't need to answer this message as this is to provide you the knowledge about the patient. Please just READ AND UNDERSTAND the provided Polysomnogram (PSG) Test Report. NEVER start any role playing by yourself. Answer this question in short as possible (yes/no). Also Do not, never list up the potential questions. I don't want that.\n";
+    new_prompt_ += "\nThis is the end of the PSG Report. Tell me my Patient Number in one sentence.\n";
     embd_inp = common_tokenize(ctx, new_prompt_, true, true);
     // LOG_INF1\n");
     // Should not run without any tokens
