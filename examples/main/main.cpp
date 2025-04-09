@@ -90,6 +90,8 @@ static void sigint_handler(int signo) {
 #endif
 
 int main(int argc, char ** argv) {
+    // PSG Report extraction check
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     std::string filePath = "../storage/documents/parsed_psg.txt";
     // 파일의 마지막 수정 시간 초기화
     auto lastWriteTime = fs::last_write_time(filePath);
@@ -114,6 +116,29 @@ int main(int argc, char ** argv) {
             break;
         }
     }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // 변경 감지 후 파일 내용 읽어오기
+    std::ifstream inFile(filePath);
+    if (!inFile) {
+        std::cerr << "파일을 열 수 없습니다: " << filePath << std::endl;
+        return 1;
+    }
+    std::stringstream buffer;
+    buffer << inFile.rdbuf();
+    std::string newPrompt = buffer.str();
+    std::cout << "새로운 프롬프트 내용:\n" << newPrompt << std::endl;
+    // --- 여기까지 파일 감시 및 프롬프트 업데이트 부분 ---
+
+    // 기존 코드: 이후부터는 LLAMA 모델 초기화 및 채팅 시스템 동작
+    common_params params;
+    g_params = &params;
+    if (!common_params_parse(argc, argv, params, LLAMA_EXAMPLE_MAIN, print_usage)) {
+        return 1;
+    }
+
+    // 파일에서 읽어온 newPrompt를 커맨드라인 인자(prompt)보다 우선하도록 덮어씁니다.
+    params.prompt = newPrompt;
+
     common_params params;
     g_params = &params;
     if (!common_params_parse(argc, argv, params, LLAMA_EXAMPLE_MAIN, print_usage)) {
