@@ -118,6 +118,9 @@ int main(int argc, char ** argv) {
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // 변경 감지 후 파일 내용 읽어오기
+    g_params = &params; // 기존에 선언된 params를 전역 포인터에 연결
+
+    // 파일에서 읽어온 프롬프트 내용으로 params.prompt 갱신
     std::ifstream inFile(filePath);
     if (!inFile) {
         std::cerr << "파일을 열 수 없습니다: " << filePath << std::endl;
@@ -127,20 +130,8 @@ int main(int argc, char ** argv) {
     buffer << inFile.rdbuf();
     std::string newPrompt = buffer.str();
     std::cout << "새로운 프롬프트 내용:\n" << newPrompt << std::endl;
-    // --- 여기까지 파일 감시 및 프롬프트 업데이트 부분 ---
+    params.prompt = newPrompt;  // 모델 프롬프트로 적용
 
-    // 기존 코드: 이후부터는 LLAMA 모델 초기화 및 채팅 시스템 동작
-    common_params params;
-    g_params = &params;
-    if (!common_params_parse(argc, argv, params, LLAMA_EXAMPLE_MAIN, print_usage)) {
-        return 1;
-    }
-
-    // 파일에서 읽어온 newPrompt를 커맨드라인 인자(prompt)보다 우선하도록 덮어씁니다.
-    params.prompt = newPrompt;
-
-    common_params params;
-    g_params = &params;
     if (!common_params_parse(argc, argv, params, LLAMA_EXAMPLE_MAIN, print_usage)) {
         return 1;
     }
@@ -148,11 +139,9 @@ int main(int argc, char ** argv) {
     common_init();
 
     auto & sparams = params.sampling;
-
-    // save choice to use color for later
-    // (note for later: this is a slightly awkward choice)
     console::init(params.simple_io, params.use_color);
     atexit([]() { console::cleanup(); });
+
 
     if (params.logits_all) {
         LOG_ERR("************\n");
