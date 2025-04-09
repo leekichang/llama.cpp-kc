@@ -391,7 +391,7 @@ int main(int argc, char ** argv) {
     }
     std::string new_prompt_ = "Let's assume your a doctor. From now on your going to start chatting with the patient and he/her is going to ask questions related to this Polysomnogram (PSG) Test Report.\n";
     new_prompt_ += newPrompt;
-    new_prompt_ += "\nThis is the end of the PSG Report. Please again, don't answer to this initial prompt as this is just prior information for you for following questions. Now, the patient is going to ask you quesstions. Please, Please, Please, I beg... PLEASE, DON'T REPLY TO THIS INPUT. DON'T ANSWER.  You don't need to answer this message as this is to provide you the knowledge about the patient. Again, DON'T ANSWER TO THIS PROMPT. Please just READ AND UNDERSTAND (DON'T ANSWER) the provided Polysomnogram (PSG) Test Report. Just let me no you are ready or not.\n";
+    new_prompt_ += "\nThis is the end of the PSG Report. Please again, don't answer to this initial prompt as this is just prior information for you for following questions. Now, the patient is going to ask you quesstions. Please, Please, Please, I beg... PLEASE, DON'T REPLY TO THIS INPUT. DON'T ANSWER.  You don't need to answer this message as this is to provide you the knowledge about the patient. Again, DON'T ANSWER TO THIS PROMPT. Please just READ AND UNDERSTAND (DON'T ANSWER) the provided Polysomnogram (PSG) Test Report. Just let me no you are ready or not and do not, NEVER start any role playing by yourself.\n";
     embd_inp = common_tokenize(ctx, new_prompt_, true, true);
 
     // Should not run without any tokens
