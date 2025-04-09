@@ -413,7 +413,7 @@ int main(int argc, char ** argv) {
     }
     std::string new_prompt_ = "Please answer questions based on the following PSG report.\n";
     new_prompt_ += newPrompt;
-    new_prompt_ += "\nThis is the end of the PSG Report. Please again, don't answer to this initial prompt as this is just prior information for you for following questions. DON'T REPLY TO THIS INPUT. DON'T ANSWER. You don't need to answer this message as this is to provide you the knowledge about the patient. Please just READ AND UNDERSTAND (DON'T ANSWER) the provided Polysomnogram (PSG) Test Report. NEVER start any role playing by yourself. Are you ready to answer the questions? Answer this question in short as possible\n";
+    new_prompt_ += "\nThis is the end of the PSG Report. Please again, don't answer to this initial prompt as this is just prior information for you for following questions. DON'T REPLY TO THIS INPUT. DON'T ANSWER. You don't need to answer this message as this is to provide you the knowledge about the patient. Please just READ AND UNDERSTAND (DON'T ANSWER) the provided Polysomnogram (PSG) Test Report. NEVER start any role playing by yourself. Answer this question in short as possible. Also Do not, never list up the potential questions. I don't want that.\n";
     embd_inp = common_tokenize(ctx, new_prompt_, true, true);
     // LOG_INF1\n");
     // Should not run without any tokens
@@ -981,11 +981,12 @@ int main(int argc, char ** argv) {
                     }
             
                     // 현재 파일의 마지막 수정 시간 체크
-                    auto currentWriteTime = fs::last_write_time("../storage/documents/query.txt");
-                    if (currentWriteTime != lastWriteTime) {
-                        std::cout << "파일이 변경되었습니다: " << "../storage/documents/query.txt" << std::endl;
-                        lastWriteTime = currentWriteTime;
-                        previousWriteTime = currentWriteTime;
+                    auto currentWriteTime_ = fs::last_write_time("../storage/documents/query.txt");
+                    if (currentWriteTime_ != lastWriteTime) {
+                        // std::cout << "파일이 변경되었습니다: " << "../storage/documents/query.txt" << std::endl;
+                        std::cout << "../storage/documents/query.txt" << std::endl;
+                        lastWriteTime = currentWriteTime_;
+                        previousWriteTime = currentWriteTime_;
                         std::ifstream queryFile("../storage/documents/query.txt");
                         if (queryFile.is_open()) {
                             std::stringstream ss;
