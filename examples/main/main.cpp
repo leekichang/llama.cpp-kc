@@ -719,7 +719,7 @@ int main(int argc, char ** argv) {
                     LOG_DBG("\nn_past_old = %d, n_past = %d, ga_i = %d\n\n", n_past + bd, n_past, ga_i);
                 }
             }
-            LOG_INF("WHERE YOU ANSWER??\n\n");
+            // LOG_INF("WHERE YOU ANSWER??\n\n");
             // try to reuse a matching prefix from the loaded session instead of re-eval (via n_past)
             if (n_session_consumed < (int) session_tokens.size()) {
                 size_t i = 0;
@@ -917,6 +917,7 @@ int main(int argc, char ** argv) {
             }
 
             if ((n_past > 0 || waiting_for_first_input) && is_interacting) {
+                LOG_INF("WAITING HERE!\n");
                 LOG_DBG("waiting for user input\n");
 
                 if (params.conversation_mode) {
