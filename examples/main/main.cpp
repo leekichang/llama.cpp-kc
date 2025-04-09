@@ -9,11 +9,15 @@
 #include <cstdio>
 #include <cstring>
 #include <ctime>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
+#include <iostream>
+
+namespace fs = std::filesystem;
 
 #if defined (__unix__) || (defined (__APPLE__) && defined (__MACH__))
 #include <signal.h>
@@ -40,6 +44,24 @@ static std::ostringstream       * g_output_ss;
 static std::vector<llama_token> * g_output_tokens;
 static bool is_interacting  = false;
 static bool need_insert_eot = false;
+
+std::string directoryPath = "../storage/downloads";
+
+// 해당 경로가 존재하는지와 디렉토리인지 확인
+if (!fs::exists(directoryPath)) {
+    std::cerr << "디렉토리가 존재하지 않습니다: " << directoryPath << std::endl;
+    return 1;
+}
+
+if (!fs::is_directory(directoryPath)) {
+    std::cerr << "지정한 경로가 디렉토리가 아닙니다: " << directoryPath << std::endl;
+    return 1;
+}
+
+// 디렉토리 내의 파일 및 디렉토리들을 순회하면서 경로 출력
+for (const auto & entry : fs::directory_iterator(directoryPath)) {
+    std::cout << entry.path().string() << std::endl;
+}
 
 static void print_usage(int argc, char ** argv) {
     (void) argc;
