@@ -89,33 +89,26 @@ static void sigint_handler(int signo) {
 
 int main(int argc, char ** argv) {
     std::string filePath = "../storage/documents/parsed_psg.txt";
+    // 파일의 마지막 수정 시간 초기화
+    auto lastWriteTime = fs::last_write_time(filePath);
+    std::cout << "파일 감시 시작: " << filePath << std::endl;
 
-    fs::file_time_type lastWriteTime;
-    if (fs::exists(filePath)) {
-        lastWriteTime = fs::last_write_time(filePath);
-    } else {
-        lastWriteTime = fs::file_time_type::min();
-    }
-
-    std::cout << "파일 감시를 시작합니다. (엔터 키 입력 시 파일 상태를 확인합니다.)" << std::endl;
-
-    // 사용자 입력(엔터)을 기다리면서 파일의 변경 여부 확인
+    // 무한 루프를 통해 파일 변경 감시
     while (true) {
-        std::cout << "\n엔터 키를 눌러 파일 상태를 확인하세요...";
-        std::string dummy;
-        std::getline(std::cin, dummy);  // 사용자 입력(엔터) 대기
-        
+        // 짧은 시간 대기 (CPU 과다 사용 방지)
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+        // 파일이 존재하는지 재확인
         if (!fs::exists(filePath)) {
-            std::cout << "파일이 존재하지 않습니다: " << filePath << std::endl;
-        } else {
-            // 현재 파일의 마지막 수정 시간 읽어오기
-            auto currentWriteTime = fs::last_write_time(filePath);
-            if (currentWriteTime != lastWriteTime) {
-                std::cout << "파일이 변경되었습니다: " << filePath << std::endl;
-                lastWriteTime = currentWriteTime;  // 변경 시점으로 갱신
-            } else {
-                std::cout << "변경된 내용이 없습니다." << std::endl;
-            }
+            std::cerr << "파일이 삭제되었거나 접근할 수 없습니다: " << filePath << std::endl;
+            continue;
+        }
+
+        // 현재 파일의 마지막 수정 시간 체크
+        auto currentWriteTime = fs::last_write_time(filePath);
+        if (currentWriteTime != lastWriteTime) {
+            std::cout << "파일이 변경되었습니다: " << filePath << std::endl;
+            lastWriteTime = currentWriteTime;
         }
     }
     common_params params;
