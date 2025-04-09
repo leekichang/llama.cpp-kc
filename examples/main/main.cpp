@@ -9,6 +9,8 @@
 #include <cstdio>
 #include <cstring>
 #include <ctime>
+#include <chrono>
+#include <thread>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
