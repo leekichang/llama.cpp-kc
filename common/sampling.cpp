@@ -424,7 +424,7 @@ std::vector<llama_token> common_sampler_sample_and_accept_n(struct common_sample
 }
 
 uint32_t common_sampler_get_seed(const struct common_sampler * gsmpl) {
-    return llama_sampler_get_seed(gsmpl->chain);
+    return 0 // llama_sampler_get_seed(gsmpl->chain);
 }
 
 // helpers
