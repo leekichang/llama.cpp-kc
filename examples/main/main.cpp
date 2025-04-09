@@ -374,7 +374,8 @@ int main(int argc, char ** argv) {
             LOG_DBG("tokenize the prompt\n");
             // embd_inp = common_tokenize(ctx, prompt, true, true);
             //////////////////////////////////////////////////////////////////
-            newPrompt += "\n From now on the client is going to ask questions related to this Polysomnogram (PSG) Test Report. You don't need to answer this prompt as this is to provide you the knowledge about the patient.";
+            std::string new_prompt_ = "Let's assume your a doctor. From now on the patient is going to ask questions related to this Polysomnogram (PSG) Test Report. You don't need to answer this message as this is to provide you the knowledge about the patient. Again, DON'T ANSWER TO THIS PROMPT. Please just READ AND UNDERSTAND (DON'T ANSWER) the following Polysomnogram (PSG) Test Report.";
+            new_prompt_ += newPrompt;
             embd_inp = common_tokenize(ctx, newPrompt, true, true);
 
             //////////////////////////////////////////////////////////////////
