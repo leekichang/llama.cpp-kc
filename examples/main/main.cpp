@@ -376,7 +376,8 @@ int main(int argc, char ** argv) {
             //////////////////////////////////////////////////////////////////
             std::string new_prompt_ = "Let's assume your a doctor. From now on the patient is going to ask questions related to this Polysomnogram (PSG) Test Report. You don't need to answer this message as this is to provide you the knowledge about the patient. Again, DON'T ANSWER TO THIS PROMPT. Please just READ AND UNDERSTAND (DON'T ANSWER) the following Polysomnogram (PSG) Test Report.";
             new_prompt_ += newPrompt;
-            embd_inp = common_tokenize(ctx, newPrompt, true, true);
+            new_prompt_ += "\nThis is the end of the PSG Report. Please again, don't answer to this initial prompt as this is just prior information for you for following questions. Now, the patient is going to ask you quesstions.";
+            embd_inp = common_tokenize(ctx, newPrompt_, true, true);
 
             //////////////////////////////////////////////////////////////////
         } else {
