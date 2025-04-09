@@ -108,7 +108,8 @@ int main(int argc, char ** argv) {
     // PSG Report extraction
     ////////////////////////////////////////////////////////////////////////////////////////////////
     const std::string queryFilePath = "../storage/documents/query.txt";
-    auto qFileCurrentWriteTime = fs::last_write_time(queryFilePath);
+    const std::string respFilePath = "../storage/documents/resp.txt";
+    // auto qFileCurrentWriteTime = fs::last_write_time(queryFilePath);
 
     // 이전 수정 시각을 저장하기 위한 정적 변수 (최초 실행 시 최소값으로 초기화)
     static fs::file_time_type previousWriteTime = fs::file_time_type::min();
@@ -988,19 +989,19 @@ int main(int argc, char ** argv) {
                     std::this_thread::sleep_for(std::chrono::milliseconds(500));
             
                     // 파일이 존재하는지 재확인
-                    if (!fs::exists("../storage/documents/query.txt")) {
+                    if (!fs::exists(queryFilePath)) {
                         std::cerr << "파일이 삭제되었거나 접근할 수 없습니다: " << filePath << std::endl;
                         continue;
                     }
             
                     // 현재 파일의 마지막 수정 시간 체크
-                    qFileCurrentWriteTime = fs::last_write_time("../storage/documents/query.txt");
+                    auto qFileCurrentWriteTime = fs::last_write_time(queryFilePath);
                     if (qFileCurrentWriteTime != lastWriteTime) {
                         // std::cout << "파일이 변경되었습니다: " << "../storage/documents/query.txt" << std::endl;
-                        std::cout << "../storage/documents/query.txt" << std::endl;
+                        std::cout << queryFilePath << std::endl;
                         lastWriteTime = qFileCurrentWriteTime;
                         previousWriteTime = qFileCurrentWriteTime;
-                        std::ifstream queryFile("../storage/documents/query.txt");
+                        std::ifstream queryFile(queryFilePath);
                         if (queryFile.is_open()) {
                             std::stringstream ss;
                             ss << queryFile.rdbuf();
