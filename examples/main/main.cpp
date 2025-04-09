@@ -68,6 +68,21 @@ static bool file_is_empty(const std::string & path) {
     return f.tellg() == 0;
 }
 
+
+// READ QUERY TXT
+std::string readQueryFromFile(const std::string &filePath) {
+    std::ifstream inFile(filePath);
+    if (!inFile) {
+        std::cerr << "파일을 열 수 없습니다: " << filePath << std::endl;
+        return "";
+    }
+    std::stringstream buffer;
+    buffer << inFile.rdbuf();
+    inFile.close();
+    return buffer.str();
+}
+
+
 #if defined (__unix__) || (defined (__APPLE__) && defined (__MACH__)) || defined (_WIN32)
 static void sigint_handler(int signo) {
     if (signo == SIGINT) {
@@ -92,6 +107,13 @@ static void sigint_handler(int signo) {
 int main(int argc, char ** argv) {
     // PSG Report extraction
     ////////////////////////////////////////////////////////////////////////////////////////////////
+    const std::string queryFilePath = "../storage/documents/query.txt";
+    auto currentWriteTime = fs::last_write_time(queryFilePath);
+
+    // 이전 수정 시각을 저장하기 위한 정적 변수 (최초 실행 시 최소값으로 초기화)
+    static fs::file_time_type previousWriteTime = fs::file_time_type::min();
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
     std::string filePath = "../storage/documents/parsed_psg.txt";
     // 파일의 마지막 수정 시간 초기화
     auto lastWriteTime = fs::last_write_time(filePath);
@@ -948,15 +970,25 @@ int main(int argc, char ** argv) {
                 // } while (another_line);
 
                 // std::string buffer;
-                std::ifstream queryFile("../storage/documents/query.txt");
-                if (queryFile.is_open()) {
-                    std::stringstream ss;
-                    ss << queryFile.rdbuf();
-                    buffer = ss.str();
-                    queryFile.close();
+
+                if (currentWriteTime != previousWriteTime) {
+                    std::cout << "새로운 query가 감지되었습니다." << std::endl;
+                    // 변경된 시점으로 이전 수정 시각을 갱신
+                    previousWriteTime = currentWriteTime;
+                    std::ifstream queryFile("../storage/documents/query.txt");
+                    if (queryFile.is_open()) {
+                        std::stringstream ss;
+                        ss << queryFile.rdbuf();
+                        buffer = ss.str();
+                        queryFile.close();
+                    } else {
+                        LOG_ERR("Failed to open ../storage/documents/query.txt\n");
+                    }
+
                 } else {
-                    LOG_ERR("Failed to open ../storage/documents/query.txt\n");
+                    std::cout << "쿼리 파일 업데이트가 없습니다." << std::endl;
                 }
+
 
                 // done taking input, reset color
                 console::set_display(console::reset);
