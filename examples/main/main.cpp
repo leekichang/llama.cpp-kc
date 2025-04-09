@@ -99,34 +99,34 @@ int main(int argc, char ** argv) {
     console::init(params.simple_io, params.use_color);
     atexit([]() { console::cleanup(); });
 
-    // if (params.logits_all) {
-    //     LOG_ERR("************\n");
-    //     LOG_ERR("%s: please use the 'perplexity' tool for perplexity calculations\n", __func__);
-    //     LOG_ERR("************\n\n");
+    if (params.logits_all) {
+        LOG_ERR("************\n");
+        LOG_ERR("%s: please use the 'perplexity' tool for perplexity calculations\n", __func__);
+        LOG_ERR("************\n\n");
 
-    //     return 0;
+        return 0;
     }
 
-    // if (params.embedding) {
-    //     LOG_ERR("************\n");
-    //     LOG_ERR("%s: please use the 'embedding' tool for embedding calculations\n", __func__);
-    //     LOG_ERR("************\n\n");
+    if (params.embedding) {
+        LOG_ERR("************\n");
+        LOG_ERR("%s: please use the 'embedding' tool for embedding calculations\n", __func__);
+        LOG_ERR("************\n\n");
 
-    //     return 0;
-    // }
+        return 0;
+    }
 
-    // if (params.n_ctx != 0 && params.n_ctx < 8) {
-    //     LOG_WRN("%s: warning: minimum context size is 8, using minimum size.\n", __func__);
-    //     params.n_ctx = 8;
-    // }
+    if (params.n_ctx != 0 && params.n_ctx < 8) {
+        LOG_WRN("%s: warning: minimum context size is 8, using minimum size.\n", __func__);
+        params.n_ctx = 8;
+    }
 
-    // if (params.rope_freq_base != 0.0) {
-    //     LOG_WRN("%s: warning: changing RoPE frequency base to %g.\n", __func__, params.rope_freq_base);
-    // }
+    if (params.rope_freq_base != 0.0) {
+        LOG_WRN("%s: warning: changing RoPE frequency base to %g.\n", __func__, params.rope_freq_base);
+    }
 
-    // if (params.rope_freq_scale != 0.0) {
-    //     LOG_WRN("%s: warning: scaling RoPE frequency by %g.\n", __func__, params.rope_freq_scale);
-    // }
+    if (params.rope_freq_scale != 0.0) {
+        LOG_WRN("%s: warning: scaling RoPE frequency by %g.\n", __func__, params.rope_freq_scale);
+    }
 
     LOG_INF("%s: llama backend init\n", __func__);
 
@@ -144,7 +144,7 @@ int main(int argc, char ** argv) {
     std::vector<common_chat_msg> chat_msgs;
 
     // load the model and apply lora adapter, if any
-    // LOG_INF("%s: load the model and apply lora adapter, if any\n", __func__);
+    LOG_INF("%s: load the model and apply lora adapter, if any\n", __func__);
     common_init_result llama_init = common_init_from_params(params);
 
     model = llama_init.model.get();
@@ -158,7 +158,7 @@ int main(int argc, char ** argv) {
     const llama_vocab * vocab = llama_model_get_vocab(model);
     auto chat_templates = common_chat_templates_init(model, params.chat_template);
 
-    //  LOG_INF("%s: llama threadpool init, n_threads = %d\n", __func__, (int) params.cpuparams.n_threads);
+    LOG_INF("%s: llama threadpool init, n_threads = %d\n", __func__, (int) params.cpuparams.n_threads);
 
     auto * reg = ggml_backend_dev_backend_reg(ggml_backend_dev_by_type(GGML_BACKEND_DEVICE_TYPE_CPU));
     auto * ggml_threadpool_new_fn = (decltype(ggml_threadpool_new) *) ggml_backend_reg_get_proc_address(reg, "ggml_threadpool_new");
@@ -221,28 +221,28 @@ int main(int argc, char ** argv) {
                 LOG_WRN("*** User-specified prompt will pre-start conversation, did you mean to set --system-prompt (-sys) instead?\n");
             }
 
-            // LOG_INF("%s: chat template example:\n%s\n", __func__, common_chat_format_example(chat_templates.get(), params.use_jinja).c_str());
+            LOG_INF("%s: chat template example:\n%s\n", __func__, common_chat_format_example(chat_templates.get(), params.use_jinja).c_str());
         } else {
-            // LOG_INF("%s: in-suffix/prefix is specified, chat template will be disabled\n", __func__);
+            LOG_INF("%s: in-suffix/prefix is specified, chat template will be disabled\n", __func__);
         }
     }
 
     // print system information
     {
-        // LOG_INF("\n");
-        // LOG_INF("%s\n", common_params_get_system_info(params).c_str());
-        // LOG_INF("\n");
+        LOG_INF("\n");
+        LOG_INF("%s\n", common_params_get_system_info(params).c_str());
+        LOG_INF("\n");
     }
 
     std::string path_session = params.path_prompt_cache;
     std::vector<llama_token> session_tokens;
 
     if (!path_session.empty()) {
-        // LOG_INF("%s: attempting to load saved session from '%s'\n", __func__, path_session.c_str());
+        LOG_INF("%s: attempting to load saved session from '%s'\n", __func__, path_session.c_str());
         if (!file_exists(path_session)) {
-            // LOG_INF("%s: session file does not exist, will create.\n", __func__);
+            LOG_INF("%s: session file does not exist, will create.\n", __func__);
         } else if (file_is_empty(path_session)) {
-            // LOG_INF("%s: The session file is empty. A new session will be initialized.\n", __func__);
+            LOG_INF("%s: The session file is empty. A new session will be initialized.\n", __func__);
         } else {
             // The file exists and is not empty
             session_tokens.resize(n_ctx);
@@ -252,7 +252,7 @@ int main(int argc, char ** argv) {
                 return 1;
             }
             session_tokens.resize(n_token_count_out);
-            // LOG_INF("%s: loaded a session with prompt size of %d tokens\n", __func__, (int)session_tokens.size());
+            LOG_INF("%s: loaded a session with prompt size of %d tokens\n", __func__, (int)session_tokens.size());
         }
     }
 
@@ -342,14 +342,14 @@ int main(int argc, char ** argv) {
             n_matching_session_tokens++;
         }
         if (params.prompt.empty() && n_matching_session_tokens == embd_inp.size()) {
-            // LOG_INF("%s: using full prompt from session file\n", __func__);
+            LOG_INF("%s: using full prompt from session file\n", __func__);
         } else if (n_matching_session_tokens >= embd_inp.size()) {
-            // LOG_INF("%s: session file has exact match for prompt!\n", __func__);
+            LOG_INF("%s: session file has exact match for prompt!\n", __func__);
         } else if (n_matching_session_tokens < (embd_inp.size() / 2)) {
             LOG_WRN("%s: session file has low similarity to prompt (%zu / %zu tokens); will mostly be reevaluated\n",
                     __func__, n_matching_session_tokens, embd_inp.size());
         } else {
-            // LOG_INF("%s: session file matches %zu / %zu tokens of prompt\n",
+            LOG_INF("%s: session file matches %zu / %zu tokens of prompt\n",
                     __func__, n_matching_session_tokens, embd_inp.size());
         }
 
@@ -390,20 +390,20 @@ int main(int argc, char ** argv) {
     }
 
     if (params.verbose_prompt) {
-        // LOG_INF("%s: prompt: '%s'\n", __func__, params.prompt.c_str());
-        // LOG_INF("%s: number of tokens in prompt = %zu\n", __func__, embd_inp.size());
+        LOG_INF("%s: prompt: '%s'\n", __func__, params.prompt.c_str());
+        LOG_INF("%s: number of tokens in prompt = %zu\n", __func__, embd_inp.size());
         for (int i = 0; i < (int) embd_inp.size(); i++) {
-            // LOG_INF("%6d -> '%s'\n", embd_inp[i], common_token_to_piece(ctx, embd_inp[i]).c_str());
+            LOG_INF("%6d -> '%s'\n", embd_inp[i], common_token_to_piece(ctx, embd_inp[i]).c_str());
         }
 
         if (params.n_keep > add_bos) {
-            // LOG_INF("%s: static prompt based on n_keep: '", __func__);
+            LOG_INF("%s: static prompt based on n_keep: '", __func__);
             for (int i = 0; i < params.n_keep; i++) {
                 LOG_CNT("%s", common_token_to_piece(ctx, embd_inp[i]).c_str());
             }
             LOG_CNT("'\n");
         }
-        // LOG_INF("\n");
+        LOG_INF("\n");
     }
 
     // ctrl+C handling
@@ -423,40 +423,40 @@ int main(int argc, char ** argv) {
     }
 
     if (params.interactive) {
-        // LOG_INF("%s: interactive mode on.\n", __func__);
+        LOG_INF("%s: interactive mode on.\n", __func__);
 
         if (!params.antiprompt.empty()) {
             for (const auto & antiprompt : params.antiprompt) {
-                // LOG_INF("Reverse prompt: '%s'\n", antiprompt.c_str());
+                LOG_INF("Reverse prompt: '%s'\n", antiprompt.c_str());
                 if (params.verbose_prompt) {
                     auto tmp = common_tokenize(ctx, antiprompt, false, true);
                     for (int i = 0; i < (int) tmp.size(); i++) {
-                        // LOG_INF("%6d -> '%s'\n", tmp[i], common_token_to_piece(ctx, tmp[i]).c_str());
+                        LOG_INF("%6d -> '%s'\n", tmp[i], common_token_to_piece(ctx, tmp[i]).c_str());
                     }
                 }
             }
         }
 
         if (params.input_prefix_bos) {
-            // LOG_INF("Input prefix with BOS\n");
+            LOG_INF("Input prefix with BOS\n");
         }
 
         if (!params.input_prefix.empty()) {
-            // LOG_INF("Input prefix: '%s'\n", params.input_prefix.c_str());
+            LOG_INF("Input prefix: '%s'\n", params.input_prefix.c_str());
             if (params.verbose_prompt) {
                 auto tmp = common_tokenize(ctx, params.input_prefix, true, true);
                 for (int i = 0; i < (int) tmp.size(); i++) {
-                    // LOG_INF("%6d -> '%s'\n", tmp[i], common_token_to_piece(ctx, tmp[i]).c_str());
+                    LOG_INF("%6d -> '%s'\n", tmp[i], common_token_to_piece(ctx, tmp[i]).c_str());
                 }
             }
         }
 
         if (!params.input_suffix.empty()) {
-            // LOG_INF("Input suffix: '%s'\n", params.input_suffix.c_str());
+            LOG_INF("Input suffix: '%s'\n", params.input_suffix.c_str());
             if (params.verbose_prompt) {
                 auto tmp = common_tokenize(ctx, params.input_suffix, false, true);
                 for (int i = 0; i < (int) tmp.size(); i++) {
-                    // LOG_INF("%6d -> '%s'\n", tmp[i], common_token_to_piece(ctx, tmp[i]).c_str());
+                    LOG_INF("%6d -> '%s'\n", tmp[i], common_token_to_piece(ctx, tmp[i]).c_str());
                 }
             }
         }
@@ -487,9 +487,9 @@ int main(int argc, char ** argv) {
         GGML_ASSERT(ga_w % ga_n == 0            && "grp_attn_w must be a multiple of grp_attn_n");     // NOLINT
       //GGML_ASSERT(n_ctx_train % ga_w == 0     && "n_ctx_train must be a multiple of grp_attn_w");    // NOLINT
       //GGML_ASSERT(n_ctx >= n_ctx_train * ga_n && "n_ctx must be at least n_ctx_train * grp_attn_n"); // NOLINT
-        // LOG_INF("self-extend: n_ctx_train = %d, grp_attn_n = %d, grp_attn_w = %d\n", n_ctx_train, ga_n, ga_w);
+        LOG_INF("self-extend: n_ctx_train = %d, grp_attn_n = %d, grp_attn_w = %d\n", n_ctx_train, ga_n, ga_w);
     }
-    // LOG_INF("\n");
+    LOG_INF("\n");
 
     if (params.interactive) {
         const char * control_message;
@@ -501,15 +501,15 @@ int main(int argc, char ** argv) {
                               " - To return control without starting a new line, end your input with '/'.\n"
                               " - If you want to submit another line, end your input with '\\'.\n";
         }
-        // LOG_INF("== Running in interactive mode. ==\n");
+        LOG_INF("== Running in interactive mode. ==\n");
 #if defined (__unix__) || (defined (__APPLE__) && defined (__MACH__)) || defined (_WIN32)
-        // LOG_INF(       " - Press Ctrl+C to interject at any time.\n");
+        LOG_INF(       " - Press Ctrl+C to interject at any time.\n");
 #endif
-        // LOG_INF(       "%s", control_message);
+        LOG_INF(       "%s", control_message);
         if (params.conversation_mode && params.enable_chat_template && params.system_prompt.empty()) {
-            // LOG_INF(   " - Not using system message. To change it, set a different value via -sys PROMPT\n");
+            LOG_INF(   " - Not using system message. To change it, set a different value via -sys PROMPT\n");
         }
-        // LOG_INF("\n");
+        LOG_INF("\n");
 
         is_interacting = params.interactive_first;
     }
