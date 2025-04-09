@@ -393,7 +393,7 @@ int main(int argc, char ** argv) {
     new_prompt_ += newPrompt;
     new_prompt_ += "\nThis is the end of the PSG Report. Please again, don't answer to this initial prompt as this is just prior information for you for following questions. Please, Please, Please, I beg... PLEASE, DON'T REPLY TO THIS INPUT. DON'T ANSWER. You don't need to answer this message as this is to provide you the knowledge about the patient. Again, DON'T ANSWER TO THIS PROMPT. Please just READ AND UNDERSTAND (DON'T ANSWER) the provided Polysomnogram (PSG) Test Report. NEVER start any role playing by yourself. Are you ready to answer the questions?\n";
     embd_inp = common_tokenize(ctx, new_prompt_, true, true);
-
+    LOG_INF("FUCK1");
     // Should not run without any tokens
     if (!waiting_for_first_input && embd_inp.empty()) {
         if (add_bos) {
@@ -404,13 +404,13 @@ int main(int argc, char ** argv) {
             return -1;
         }
     }
-
+    LOG_INF("FUCK2");
     // Tokenize negative prompt
     if ((int) embd_inp.size() > n_ctx - 4) {
         LOG_ERR("%s: prompt is too long (%d tokens, max %d)\n", __func__, (int) embd_inp.size(), n_ctx - 4);
         return 1;
     }
-
+    LOG_INF("FUCK3");
     // debug message about similarity of saved session, if applicable
     size_t n_matching_session_tokens = 0;
     if (!session_tokens.empty()) {
@@ -435,7 +435,7 @@ int main(int argc, char ** argv) {
         // remove any "future" tokens that we might have inherited from the previous session
         llama_kv_self_seq_rm(ctx, -1, n_matching_session_tokens, -1);
     }
-
+    LOG_INF("FUCK4");
     LOG_DBG("recalculate the cached logits (check): embd_inp.size() %zu, n_matching_session_tokens %zu, embd_inp.size() %zu, session_tokens.size() %zu\n",
          embd_inp.size(), n_matching_session_tokens, embd_inp.size(), session_tokens.size());
 
@@ -462,7 +462,7 @@ int main(int argc, char ** argv) {
             params.interactive_first = true;
         }
     }
-
+    LOG_INF("FUCK5");
     // enable interactive mode if interactive start is specified
     if (params.interactive_first) {
         params.interactive = true;
@@ -592,7 +592,7 @@ int main(int argc, char ** argv) {
 
         is_interacting = params.interactive_first;
     }
-
+    LOG_INF("FUCK1");
     bool is_antiprompt        = false;
     bool input_echo           = true;
     bool display              = true;
@@ -609,20 +609,23 @@ int main(int argc, char ** argv) {
     std::ostringstream assistant_ss; // for storing current assistant message, used in conversation mode
 
     // the first thing we will do is to output the prompt, so set color accordingly
+    LOG_INF("FUCK2");
     console::set_display(console::prompt);
+    LOG_INF("FUCK3");
     display = params.display_prompt;
-
+    LOG_INF("FUCK4");
     std::vector<llama_token> embd;
 
     // single-token antiprompts
     std::vector<llama_token> antiprompt_token;
-
+    LOG_INF("FUCK5");
     for (const std::string & antiprompt : params.antiprompt) {
         auto ids = ::common_tokenize(ctx, antiprompt, false, true);
         if (ids.size() == 1) {
             antiprompt_token.push_back(ids[0]);
         }
     }
+    LOG_INF("FUCK6");
 
     if (llama_model_has_encoder(model)) {
         int enc_input_size = embd_inp.size();
@@ -641,14 +644,14 @@ int main(int argc, char ** argv) {
         embd_inp.clear();
         embd_inp.push_back(decoder_start_token_id);
     }
-
+    LOG_INF("DOBULE FUCK");
     while ((n_remain != 0 && !is_antiprompt) || params.interactive) {
         // predict
         if (!embd.empty()) {
             // Note: (n_ctx - 4) here is to match the logic for commandline prompt handling via
             // --prompt or --file which uses the same value.
             int max_embd_size = n_ctx - 4;
-
+            
             // Ensure the input doesn't exceed the context size by truncating embd if necessary.
             if ((int) embd.size() > max_embd_size) {
                 const int skipped_tokens = (int) embd.size() - max_embd_size;
