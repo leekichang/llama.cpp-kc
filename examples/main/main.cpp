@@ -108,11 +108,11 @@ int main(int argc, char ** argv) {
     // PSG Report extraction
     ////////////////////////////////////////////////////////////////////////////////////////////////
     const std::string queryFilePath = "../storage/documents/query.txt";
-    const std::string respFilePath = "../storage/documents/resp.txt";
+    auto qFileCurrentWriteTime = fs::last_write_time(queryFilePath);
 
     // 이전 수정 시각을 저장하기 위한 정적 변수 (최초 실행 시 최소값으로 초기화)
-    static fs::file_time_type previousWriteTime = fs::last_write_time(queryFilePath);
-    auto lastQueryWriteTime = fs::last_write_time(queryFilePath);
+    static fs::file_time_type previousWriteTime = fs::file_time_type::min();
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
     std::string filePath = "../storage/documents/parsed_psg.txt";
     // 파일의 마지막 수정 시간 초기화
@@ -953,7 +953,6 @@ int main(int argc, char ** argv) {
                         LOG_ERR("Failed to open resp.txt for writing.");
                     }
                 }else{
-                    LOG_INF(isFirst);
                     isFirst+=1;
                 }
 
