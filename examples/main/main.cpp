@@ -358,8 +358,8 @@ int main(int argc, char ** argv) {
 
             if (!params.system_prompt.empty() || !params.prompt.empty()) {
                 common_chat_templates_inputs inputs;
-                // inputs.messages = chat_msgs;
-                inputs.messages = "FUCKYOU";
+                inputs.messages = chat_msgs;
+                // inputs.messages = "FUCKYOU";
                 inputs.add_generation_prompt = !params.prompt.empty();
 
                 prompt = common_chat_templates_apply(chat_templates.get(), inputs).prompt;
@@ -371,7 +371,8 @@ int main(int argc, char ** argv) {
 
         if (params.interactive_first || !prompt.empty() || session_tokens.empty()) {
             LOG_DBG("tokenize the prompt\n");
-            embd_inp = common_tokenize(ctx, prompt, true, true);
+            // embd_inp = common_tokenize(ctx, prompt, true, true);
+            embd_inp = common_tokenize(ctx, "FUCK!!HELP ME!", true, true);
         } else {
             LOG_DBG("use session tokens\n");
             embd_inp = session_tokens;
