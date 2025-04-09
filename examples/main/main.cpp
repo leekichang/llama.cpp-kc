@@ -111,6 +111,7 @@ int main(int argc, char ** argv) {
         if (currentWriteTime != lastWriteTime) {
             std::cout << "파일이 변경되었습니다: " << filePath << std::endl;
             lastWriteTime = currentWriteTime;
+            break;
         }
     }
     common_params params;
