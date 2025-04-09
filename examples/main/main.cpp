@@ -414,7 +414,7 @@ int main(int argc, char ** argv) {
     }
     std::string new_prompt_ = "Please answer questions based on the following PSG report.\n";
     new_prompt_ += newPrompt;
-    new_prompt_ += "\nThis is the end of the PSG Report. Tell me my Patient Number in one sentence.\n";
+    new_prompt_ += "\nThis is the end of the PSG Report. Tell me Who am I. Limited to this question, answer only with a single word.\n";
     embd_inp = common_tokenize(ctx, new_prompt_, true, true);
     // LOG_INF1\n");
     // Should not run without any tokens
