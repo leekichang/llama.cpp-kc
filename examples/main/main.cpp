@@ -415,7 +415,7 @@ int main(int argc, char ** argv) {
     new_prompt_ += newPrompt;
     new_prompt_ += "\nThis is the end of the PSG Report. Please again, don't answer to this initial prompt as this is just prior information for you for following questions. DON'T REPLY TO THIS INPUT. DON'T ANSWER. You don't need to answer this message as this is to provide you the knowledge about the patient. Please just READ AND UNDERSTAND (DON'T ANSWER) the provided Polysomnogram (PSG) Test Report. NEVER start any role playing by yourself. Are you ready to answer the questions? Answer this question in short as possible\n";
     embd_inp = common_tokenize(ctx, new_prompt_, true, true);
-    LOG_INF("FUCK1\n");
+    // LOG_INF1\n");
     // Should not run without any tokens
     if (!waiting_for_first_input && embd_inp.empty()) {
         if (add_bos) {
@@ -426,13 +426,13 @@ int main(int argc, char ** argv) {
             return -1;
         }
     }
-    LOG_INF("FUCK2\n");
+    // LOG_INF2\n");
     // Tokenize negative prompt
     if ((int) embd_inp.size() > n_ctx - 4) {
         LOG_ERR("%s: prompt is too long (%d tokens, max %d)\n", __func__, (int) embd_inp.size(), n_ctx - 4);
         return 1;
     }
-    LOG_INF("FUCK3\n");
+    // LOG_INF3\n");
     // debug message about similarity of saved session, if applicable
     size_t n_matching_session_tokens = 0;
     if (!session_tokens.empty()) {
@@ -457,7 +457,7 @@ int main(int argc, char ** argv) {
         // remove any "future" tokens that we might have inherited from the previous session
         llama_kv_self_seq_rm(ctx, -1, n_matching_session_tokens, -1);
     }
-    LOG_INF("FUCK4\n");
+    // LOG_INF4\n");
     LOG_DBG("recalculate the cached logits (check): embd_inp.size() %zu, n_matching_session_tokens %zu, embd_inp.size() %zu, session_tokens.size() %zu\n",
          embd_inp.size(), n_matching_session_tokens, embd_inp.size(), session_tokens.size());
 
@@ -484,7 +484,7 @@ int main(int argc, char ** argv) {
             params.interactive_first = true;
         }
     }
-    LOG_INF("FUCK5\n");
+    // LOG_INF5\n");
     // enable interactive mode if interactive start is specified
     if (params.interactive_first) {
         params.interactive = true;
@@ -614,7 +614,7 @@ int main(int argc, char ** argv) {
 
         is_interacting = params.interactive_first;
     }
-    LOG_INF("FUCK1\n");
+    // LOG_INF1\n");
     bool is_antiprompt        = false;
     bool input_echo           = true;
     bool display              = true;
@@ -631,23 +631,23 @@ int main(int argc, char ** argv) {
     std::ostringstream assistant_ss; // for storing current assistant message, used in conversation mode
 
     // the first thing we will do is to output the prompt, so set color accordingly
-    LOG_INF("FUCK2\n");
+    // LOG_INF2\n");
     console::set_display(console::prompt);
-    LOG_INF("FUCK3\n");
+    // LOG_INF3\n");
     display = params.display_prompt;
-    LOG_INF("FUCK4\n");
+    // LOG_INF4\n");
     std::vector<llama_token> embd;
 
     // single-token antiprompts
     std::vector<llama_token> antiprompt_token;
-    LOG_INF("FUCK5\n");
+    // LOG_INF5\n");
     for (const std::string & antiprompt : params.antiprompt) {
         auto ids = ::common_tokenize(ctx, antiprompt, false, true);
         if (ids.size() == 1) {
             antiprompt_token.push_back(ids[0]);
         }
     }
-    LOG_INF("FUCK6\n");
+    // LOG_INF6\n");
 
     if (llama_model_has_encoder(model)) {
         int enc_input_size = embd_inp.size();
@@ -981,9 +981,9 @@ int main(int argc, char ** argv) {
                     }
             
                     // 현재 파일의 마지막 수정 시간 체크
-                    auto currentWriteTime = fs::last_write_time(filePath);
+                    auto currentWriteTime = fs::last_write_time("../storage/documents/query.txt");
                     if (currentWriteTime != lastWriteTime) {
-                        std::cout << "파일이 변경되었습니다: " << filePath << std::endl;
+                        std::cout << "파일이 변경되었습니다: " << "../storage/documents/query.txt" << std::endl;
                         lastWriteTime = currentWriteTime;
                         previousWriteTime = currentWriteTime;
                         std::ifstream queryFile("../storage/documents/query.txt");
