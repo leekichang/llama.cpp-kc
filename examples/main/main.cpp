@@ -413,7 +413,7 @@ int main(int argc, char ** argv) {
     }
     std::string new_prompt_ = "Please answer questions based on the following PSG report.\n";
     new_prompt_ += newPrompt;
-    new_prompt_ += "\nThis is the end of the PSG Report. Please do not answer to this initial input as this is just information. DON'T REPLY TO THIS INPUT. You don't need to answer this message as this is to provide you the knowledge about the patient. Please just READ AND UNDERSTAND the provided Polysomnogram (PSG) Test Report. NEVER start any role playing by yourself. Answer this question in short as possible (yes/no). Also Do not, never list up the potential questions I don't want that.\n";
+    new_prompt_ += "\nThis is the end of the PSG Report. Please do not answer to this initial input as this is just information. DON'T REPLY TO THIS INPUT. You don't need to answer this message as this is to provide you the knowledge about the patient. Please just READ AND UNDERSTAND the provided Polysomnogram (PSG) Test Report. NEVER start any role playing by yourself. Answer this question in short as possible (yes/no). Also Do not, never list up the potential questions. I don't want that.\n";
     embd_inp = common_tokenize(ctx, new_prompt_, true, true);
     // LOG_INF1\n");
     // Should not run without any tokens
@@ -667,6 +667,7 @@ int main(int argc, char ** argv) {
         embd_inp.push_back(decoder_start_token_id);
     }
     LOG_INF("DOBULE FUCK\n");
+    int isFirst = 0 ;
     while ((n_remain != 0 && !is_antiprompt) || params.interactive) {
         // predict
         if (!embd.empty()) {
@@ -942,6 +943,18 @@ int main(int argc, char ** argv) {
                 LOG_INF("WAITING HERE!\n");
                 LOG_DBG("waiting for user input\n");
                 LOG_INF("USING FILE INPUT FROM ../storage/documents/query.txt\n");
+                if (isFirst!=0){
+                    std::ofstream respFile("resp.txt", std::ios::out);
+                    if (respFile.is_open()) {
+                        respFile << output_ss.str();  // output_ss에 누적된 전체 응답 문자열을 저장합니다.
+                        respFile.close();
+                        LOG_INF("Model response saved to resp.txt");
+                    } else {
+                        LOG_ERR("Failed to open resp.txt for writing.");
+                    }
+                }else{
+                    isFirst+=1;
+                }
 
                 if (params.conversation_mode) {
                     LOG("\n> ");
