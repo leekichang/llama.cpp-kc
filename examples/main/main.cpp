@@ -358,7 +358,8 @@ int main(int argc, char ** argv) {
 
             if (!params.system_prompt.empty() || !params.prompt.empty()) {
                 common_chat_templates_inputs inputs;
-                inputs.messages = chat_msgs;
+                // inputs.messages = chat_msgs;
+                inputs.messages = "FUCKYOU";
                 inputs.add_generation_prompt = !params.prompt.empty();
 
                 prompt = common_chat_templates_apply(chat_templates.get(), inputs).prompt;
