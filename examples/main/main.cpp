@@ -661,7 +661,6 @@ int main(int argc, char ** argv) {
                 LOG_WRN("<<input too long: skipped %d token%s>>", skipped_tokens, skipped_tokens != 1 ? "s" : "");
                 console::set_display(console::reset);
             }
-            LOG_INF("WHERE YOU ANSWER??\n\n");
             if (ga_n == 1) {
                 // infinite text generation via context shifting
                 // if we run out of context:
@@ -742,7 +741,7 @@ int main(int argc, char ** argv) {
                     embd.erase(embd.begin(), embd.begin() + i);
                 }
             }
-            LOG_INF("WHERE YOU ANSWER??\n\n");
+            // LOG_INF("WHERE YOU ANSWER??\n\n");
             for (int i = 0; i < (int) embd.size(); i += params.n_batch) {
                 int n_eval = (int) embd.size() - i;
                 if (n_eval > params.n_batch) {
@@ -764,14 +763,14 @@ int main(int argc, char ** argv) {
                     LOG_DBG("\n\033[31mTokens consumed so far = %d / %d \033[0m\n", n_past, n_ctx);
                 }
             }
-            LOG_INF("WHERE YOU ANSWER??\n\n");
+            // LOG_INF("WHERE YOU ANSWER??\n\n");
 
             if (!embd.empty() && !path_session.empty()) {
                 session_tokens.insert(session_tokens.end(), embd.begin(), embd.end());
                 n_session_consumed = session_tokens.size();
             }
         }
-        LOG_INF("END OF WHIKE\n\n");
+        // LOG_INF("END OF WHIKE\n\n");
 
         embd.clear();
 
@@ -815,7 +814,7 @@ int main(int argc, char ** argv) {
                 }
             }
         }
-        LOG_INF("ANSERS HERE?\n\n");
+        // LOG_INF("ANSERS HERE?\n\n");
         // display text
         if (input_echo && display) {
             for (auto id : embd) {
@@ -836,7 +835,7 @@ int main(int argc, char ** argv) {
                 }
             }
         }
-        LOG_INF("OR HERE?\n\n");
+        // LOG_INF("OR HERE?\n\n");
         // reset color to default if there is no pending user input
         if (input_echo && (int) embd_inp.size() == n_consumed) {
             console::set_display(console::reset);
