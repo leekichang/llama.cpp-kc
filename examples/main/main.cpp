@@ -88,22 +88,35 @@ static void sigint_handler(int signo) {
 #endif
 
 int main(int argc, char ** argv) {
-    std::string directoryPath = "../storage/documents";
+    std::string filePath = "../storage/documents/parsed_psg.txt";
 
-    // 해당 경로가 존재하는지와 디렉토리인지 확인
-    if (!fs::exists(directoryPath)) {
-        std::cerr << "디렉토리가 존재하지 않습니다: " << directoryPath << std::endl;
-        return 1;
+    fs::file_time_type lastWriteTime;
+    if (fs::exists(filePath)) {
+        lastWriteTime = fs::last_write_time(filePath);
+    } else {
+        lastWriteTime = fs::file_time_type::min();
     }
 
-    if (!fs::is_directory(directoryPath)) {
-        std::cerr << "지정한 경로가 디렉토리가 아닙니다: " << directoryPath << std::endl;
-        return 1;
-    }
+    std::cout << "파일 감시를 시작합니다. (엔터 키 입력 시 파일 상태를 확인합니다.)" << std::endl;
 
-    // 디렉토리 내의 파일 및 디렉토리들을 순회하면서 경로 출력
-    for (const auto & entry : fs::directory_iterator(directoryPath)) {
-        std::cout << entry.path().string() << std::endl;
+    // 사용자 입력(엔터)을 기다리면서 파일의 변경 여부 확인
+    while (true) {
+        std::cout << "\n엔터 키를 눌러 파일 상태를 확인하세요...";
+        std::string dummy;
+        std::getline(std::cin, dummy);  // 사용자 입력(엔터) 대기
+        
+        if (!fs::exists(filePath)) {
+            std::cout << "파일이 존재하지 않습니다: " << filePath << std::endl;
+        } else {
+            // 현재 파일의 마지막 수정 시간 읽어오기
+            auto currentWriteTime = fs::last_write_time(filePath);
+            if (currentWriteTime != lastWriteTime) {
+                std::cout << "파일이 변경되었습니다: " << filePath << std::endl;
+                lastWriteTime = currentWriteTime;  // 변경 시점으로 갱신
+            } else {
+                std::cout << "변경된 내용이 없습니다." << std::endl;
+            }
+        }
     }
     common_params params;
     g_params = &params;
