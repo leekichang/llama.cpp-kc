@@ -138,9 +138,6 @@ int main(int argc, char ** argv) {
     if (!common_params_parse(argc, argv, params, LLAMA_EXAMPLE_MAIN, print_usage)) {
         return 1;
     }
-
-
-    std::string filePath = "../storage/documents/extract_psg.txt";
     std::ifstream inFile(filePath);
     if (!inFile) {
         std::cerr << "파일을 열 수 없습니다: " << filePath << std::endl;
