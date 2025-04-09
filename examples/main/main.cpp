@@ -947,7 +947,7 @@ int main(int argc, char ** argv) {
                 //     buffer += line;
                 // } while (another_line);
 
-                std::string buffer;
+                // std::string buffer;
                 std::ifstream queryFile("../storage/documents/query.txt");
                 if (queryFile.is_open()) {
                     std::stringstream ss;
