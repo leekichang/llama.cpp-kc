@@ -971,23 +971,34 @@ int main(int argc, char ** argv) {
 
                 // std::string buffer;
 
-                if (currentWriteTime != previousWriteTime) {
-                    std::cout << "새로운 query가 감지되었습니다." << std::endl;
-                    // 변경된 시점으로 이전 수정 시각을 갱신
-                    previousWriteTime = currentWriteTime;
-                    std::ifstream queryFile("../storage/documents/query.txt");
-                    if (queryFile.is_open()) {
-                        std::stringstream ss;
-                        ss << queryFile.rdbuf();
-                        buffer = ss.str();
-                        queryFile.close();
-                    } else {
-                        LOG_ERR("Failed to open ../storage/documents/query.txt\n");
+                while (true) {
+                    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            
+                    // 파일이 존재하는지 재확인
+                    if (!fs::exists("../storage/documents/query.txt")) {
+                        std::cerr << "파일이 삭제되었거나 접근할 수 없습니다: " << filePath << std::endl;
+                        continue;
                     }
-
-                } else {
-                    std::cout << "쿼리 파일 업데이트가 없습니다." << std::endl;
+            
+                    // 현재 파일의 마지막 수정 시간 체크
+                    auto currentWriteTime = fs::last_write_time(filePath);
+                    if (currentWriteTime != lastWriteTime) {
+                        std::cout << "파일이 변경되었습니다: " << filePath << std::endl;
+                        lastWriteTime = currentWriteTime;
+                        previousWriteTime = currentWriteTime;
+                        std::ifstream queryFile("../storage/documents/query.txt");
+                        if (queryFile.is_open()) {
+                            std::stringstream ss;
+                            ss << queryFile.rdbuf();
+                            buffer = ss.str();
+                            queryFile.close();
+                        } else {
+                            LOG_ERR("Failed to open ../storage/documents/query.txt\n");
+                        }
+                        break;
+                    }
                 }
+
 
 
                 // done taking input, reset color
