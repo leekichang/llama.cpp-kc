@@ -468,6 +468,7 @@ int main(int argc, char ** argv) {
         return 1;
     }
 
+    LOG_INF("HELLO KICHANG I AM LLAMA CPP!\n");
     LOG_INF("sampler seed: %u\n",     common_sampler_get_seed(smpl));
     LOG_INF("sampler params: \n%s\n", sparams.print().c_str());
     LOG_INF("sampler chain: %s\n",    common_sampler_print(smpl).c_str());
