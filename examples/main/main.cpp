@@ -119,7 +119,7 @@ int main(int argc, char ** argv) {
     std::string filePath = "../storage/documents/parsed_psg.txt";
     // 파일의 마지막 수정 시간 초기화
     auto lastWriteTime = fs::last_write_time(filePath);
-    auto lastQueryWriteTime = fs::last_write_time(filePath);
+    auto lastQueryWriteTime = fs::last_write_time(queryFilePath);
     std::cout << "파일 감시 시작: " << filePath << std::endl;
 
     // 무한 루프를 통해 파일 변경 감시
@@ -990,14 +990,9 @@ int main(int argc, char ** argv) {
 
                 // std::string buffer;
 
+
                 while (true) {
                     std::this_thread::sleep_for(std::chrono::milliseconds(500));
-            
-                    // 파일이 존재하는지 재확인
-                    if (!fs::exists(queryFilePath)) {
-                        std::cerr << "파일이 삭제되었거나 접근할 수 없습니다: " << filePath << std::endl;
-                        continue;
-                    }
             
                     // 현재 파일의 마지막 수정 시간 체크
                     auto qFileCurrentWriteTime = fs::last_write_time(queryFilePath);
@@ -1005,7 +1000,6 @@ int main(int argc, char ** argv) {
                         // std::cout << "파일이 변경되었습니다: " << "../storage/documents/query.txt" << std::endl;
                         std::cout << queryFilePath << std::endl;
                         lastQueryWriteTime = qFileCurrentWriteTime;
-                        previousWriteTime = qFileCurrentWriteTime;
                         std::ifstream queryFile(queryFilePath);
                         if (queryFile.is_open()) {
                             std::stringstream ss;
