@@ -945,7 +945,7 @@ int main(int argc, char ** argv) {
                 LOG_DBG("waiting for user input\n");
                 LOG_INF("USING FILE INPUT FROM ../storage/documents/query.txt\n");
                 if (isFirst!=0){
-                    std::ofstream respFile("resp.txt", std::ios::out);
+                    std::ofstream respFile(respFilePath, std::ios::out);
                     if (respFile.is_open()) {
                         respFile << output_ss.str();  // output_ss에 누적된 전체 응답 문자열을 저장합니다.
                         respFile.close();
