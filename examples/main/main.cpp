@@ -1013,6 +1013,8 @@ int main(int argc, char ** argv) {
                         } else {
                             LOG_ERR("Failed to open ../storage/documents/query.txt\n");
                         }
+                        generated_ss.str("");
+                        generated_ss.clear();
                         break;
                     }
                 }
