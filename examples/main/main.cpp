@@ -668,7 +668,10 @@ int main(int argc, char ** argv) {
         embd_inp.push_back(decoder_start_token_id);
     }
     LOG_INF("DOBULE FUCK\n");
-    int isFirst = 0 ;
+    
+    int isFirst = -1 ;
+
+
     while ((n_remain != 0 && !is_antiprompt) || params.interactive) {
         // predict
         if (!embd.empty()) {
@@ -949,7 +952,7 @@ int main(int argc, char ** argv) {
                     if (respFile.is_open()) {
                         respFile << output_ss.str();  // output_ss에 누적된 전체 응답 문자열을 저장합니다.
                         respFile.close();
-                        LOG_INF("Model response saved to resp.txt");
+                        LOG_INF("Model response saved to ../storage/documents/resp.txt");
                     } else {
                         LOG_ERR("Failed to open resp.txt for writing.");
                     }
