@@ -109,6 +109,7 @@ int main(int argc, char ** argv) {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     const std::string queryFilePath = "../storage/documents/query.txt";
     const std::string respFilePath = "../storage/documents/resp.txt";
+    std::ostringstream generated_ss;  // 모델 생성 응답만 누적 (이전에 사용하던 output_ss와는 분리)
     // auto qFileCurrentWriteTime = fs::last_write_time(queryFilePath);
     static fs::file_time_type previousQueryWriteTime = fs::file_time_type::min();
 
@@ -825,7 +826,7 @@ int main(int argc, char ** argv) {
 
             // decrement remaining sampling budget
             --n_remain;
-
+            generated_ss << common_token_to_piece(ctx, id, params.special);
             LOG_DBG("n_remain: %d\n", n_remain);
         } else {
             // some user input remains from prompt or interaction, forward it to processing
@@ -949,17 +950,18 @@ int main(int argc, char ** argv) {
                 LOG_INF("WAITING HERE!\n");
                 LOG_DBG("waiting for user input\n");
                 LOG_INF("USING FILE INPUT FROM ../storage/documents/query.txt\n");
-                if (isFirst<0){
+                if (isFirst < 0) {
+                    // 모델 응답 기록은 이미 generated_ss에 쌓였습니다.
                     std::ofstream respFile(respFilePath, std::ios::out);
                     if (respFile.is_open()) {
-                        respFile << output_ss.str();  // output_ss에 누적된 전체 응답 문자열을 저장합니다.
+                        respFile << generated_ss.str();  // 이번 질문에 대한 모델 응답만 저장
                         respFile.close();
                         LOG_INF("Model response saved to ../storage/documents/resp.txt");
                     } else {
                         LOG_ERR("Failed to open resp.txt for writing.");
                     }
-                }else{
-                    isFirst+=1;
+                } else {
+                    isFirst += 1;
                 }
 
                 if (params.conversation_mode) {
