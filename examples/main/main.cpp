@@ -672,8 +672,7 @@ int main(int argc, char ** argv) {
     }
     LOG_INF("DOBULE FUCK\n");
     
-    int isFirst = -1 ;
-
+    static int isFirst = 0; 
 
     while ((n_remain != 0 && !is_antiprompt) || params.interactive) {
         // predict
@@ -950,18 +949,21 @@ int main(int argc, char ** argv) {
                 LOG_INF("WAITING HERE!\n");
                 LOG_DBG("waiting for user input\n");
                 LOG_INF("USING FILE INPUT FROM ../storage/documents/query.txt\n");
-                if (isFirst < 0) {
-                    // 모델 응답 기록은 이미 generated_ss에 쌓였습니다.
+                if (isFirst == 0) {
+                    // 첫 번째 응답은 기록하지 않고 스킵
+                    LOG_INF("Skipping recording of the first response.\n");
+                    isFirst++;  // 이후 응답부터 기록됨.
+                } else {
+                    // 두 번째 이후 응답 기록
                     std::ofstream respFile(respFilePath, std::ios::out);
                     if (respFile.is_open()) {
-                        respFile << generated_ss.str();  // 이번 질문에 대한 모델 응답만 저장
+                        respFile << generated_ss.str();  // generated_ss에 누적된 모델 출력만 기록
                         respFile.close();
-                        LOG_INF("Model response saved to ../storage/documents/resp.txt");
+                        LOG_INF("Model response saved to ../storage/documents/resp.txt\n");
                     } else {
-                        LOG_ERR("Failed to open resp.txt for writing.");
+                        LOG_ERR("Failed to open resp.txt for writing.\n");
                     }
-                } else {
-                    isFirst += 1;
+                    isFirst++;  // 다음 응답도 기록될 수 있도록 업데이트
                 }
 
                 if (params.conversation_mode) {
