@@ -110,6 +110,7 @@ int main(int argc, char ** argv) {
     const std::string queryFilePath = "../storage/documents/query.txt";
     const std::string respFilePath = "../storage/documents/resp.txt";
     // auto qFileCurrentWriteTime = fs::last_write_time(queryFilePath);
+    static fs::file_time_type previousQueryWriteTime = fs::file_time_type::min();
 
     // 이전 수정 시각을 저장하기 위한 정적 변수 (최초 실행 시 최소값으로 초기화)
     static fs::file_time_type previousWriteTime = fs::file_time_type::min();
@@ -118,6 +119,7 @@ int main(int argc, char ** argv) {
     std::string filePath = "../storage/documents/parsed_psg.txt";
     // 파일의 마지막 수정 시간 초기화
     auto lastWriteTime = fs::last_write_time(filePath);
+    auto lastQueryWriteTime = fs::last_write_time(filePath);
     std::cout << "파일 감시 시작: " << filePath << std::endl;
 
     // 무한 루프를 통해 파일 변경 감시
@@ -999,10 +1001,10 @@ int main(int argc, char ** argv) {
             
                     // 현재 파일의 마지막 수정 시간 체크
                     auto qFileCurrentWriteTime = fs::last_write_time(queryFilePath);
-                    if (qFileCurrentWriteTime != lastWriteTime) {
+                    if (qFileCurrentWriteTime != lastQueryWriteTime) {
                         // std::cout << "파일이 변경되었습니다: " << "../storage/documents/query.txt" << std::endl;
                         std::cout << queryFilePath << std::endl;
-                        lastWriteTime = qFileCurrentWriteTime;
+                        lastQueryWriteTime = qFileCurrentWriteTime;
                         previousWriteTime = qFileCurrentWriteTime;
                         std::ifstream queryFile(queryFilePath);
                         if (queryFile.is_open()) {
