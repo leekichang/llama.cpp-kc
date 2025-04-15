@@ -861,7 +861,7 @@ int main(int argc, char ** argv) {
                 createFolder(folderName);
                 LOG_INF("Skipping recording of the first response.\n");
             } else{
-                std::string fileName = "../storage/documents/resp_" + std::to_string(n_resp_files) + ".txt";
+                std::string fileName = "../storage/documents/"+ folderName +"/resp_" + std::to_string(n_resp_files) + ".txt";
                 std::ofstream outFile(fileName);
                 if (outFile) {
                     outFile << tokenPiece;  // tokenPiece 내용을 파일에 기록
