@@ -1085,8 +1085,8 @@ int main(int argc, char ** argv) {
                         // std::cout << "파일이 변경되었습니다: " << "../storage/documents/query.txt" << std::endl;
                         std::string tmp = "../storage/documents/resp/";
                         deleteAllFilesInFolder(tmp);
-                        // std::string fin_resp = "../storage/documents/resp.txt";
-                        // fs::remove(fin_resp);
+                        std::string fin_resp = "../storage/documents/resp.txt";
+                        fs::remove(fin_resp);
                         n_resp_files = 0;
                         std::cout << queryFilePath << std::endl;
                         lastQueryWriteTime = qFileCurrentWriteTime;
