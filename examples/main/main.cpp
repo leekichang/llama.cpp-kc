@@ -121,7 +121,7 @@ int main(int argc, char ** argv) {
     // 파일의 마지막 수정 시간 초기화
     auto lastWriteTime = fs::last_write_time(filePath);
     auto lastQueryWriteTime = fs::last_write_time(queryFilePath);
-    std::cout << "파일 감시 시작: " << filePath << std::endl;
+    std::cout << "Start watching file: " << filePath << std::endl;
 
     // 무한 루프를 통해 파일 변경 감시
     while (true) {
