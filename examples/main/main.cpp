@@ -68,6 +68,39 @@ static bool file_is_empty(const std::string & path) {
     return f.tellg() == 0;
 }
 
+bool createFolder(const std::string& folderName) {
+    if (!fs::exists(folderName)) {
+        if (fs::create_directory(folderName)) {
+            std::cout << "폴더 생성 성공: " << folderName << std::endl;
+            return true;
+        } else {
+            std::cerr << "폴더 생성 실패: " << folderName << std::endl;
+            return false;
+        }
+    } else {
+        std::cout << "이미 폴더가 존재합니다: " << folderName << std::endl;
+        return true;
+    }
+}
+
+std::string getCurrentTimestamp() {
+    // 현재 시간 가져오기
+    auto now = std::chrono::system_clock::now();
+    std::time_t now_c = std::chrono::system_clock::to_time_t(now);
+    
+    // std::tm 객체에 로컬 시간 저장 (플랫폼 별 안전한 함수 사용)
+    std::tm tmStruct;
+    #ifdef _WIN32
+        localtime_s(&tmStruct, &now_c);   // Windows
+    #else
+        localtime_r(&now_c, &tmStruct);   // POSIX (Linux, macOS 등)
+    #endif
+
+    // 시간 형식을 YYMMDDHHMM으로 지정
+    std::stringstream ss;
+    ss << std::put_time(&tmStruct, "%y%m%d%H%M");
+    return ss.str();
+}
 
 // READ QUERY TXT
 std::string readQueryFromFile(const std::string &filePath) {
@@ -824,6 +857,8 @@ int main(int argc, char ** argv) {
             // 파일에 쓰기 위한 ofstream 생성
             if (isFirst == 0) {
                 // 첫 번째 응답은 기록하지 않고 스킵
+                std::string folderName = "../storage/documents/resp_"+getCurrentTimestamp();
+                createFolder(folderName);
                 LOG_INF("Skipping recording of the first response.\n");
             } else{
                 std::string fileName = "../storage/documents/resp_" + std::to_string(n_resp_files) + ".txt";
