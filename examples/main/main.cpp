@@ -820,7 +820,7 @@ int main(int argc, char ** argv) {
             generated_ss << tokenPiece;
 
             // 저장할 파일 이름 생성: 예) "resp_0.txt", "resp_1.txt", ...
-            std::string fileName = "resp_" + std::to_string(n_resp_files) + ".txt";
+            std::string fileName = "../storage/documents/resp_" + std::to_string(n_resp_files) + ".txt";
 
             // 파일에 쓰기 위한 ofstream 생성
             std::ofstream outFile(fileName);
@@ -835,7 +835,7 @@ int main(int argc, char ** argv) {
             // 저장 완료 후 파일 인덱스 증가
             ++n_resp_files;
             ///////////////////////////////////////////////////////////////////////////
-            
+
             LOG_DBG("n_remain: %d\n", n_remain);
         } else {
             // some user input remains from prompt or interaction, forward it to processing
