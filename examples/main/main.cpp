@@ -820,12 +820,13 @@ int main(int argc, char ** argv) {
             generated_ss << tokenPiece;
 
             // 저장할 파일 이름 생성: 예) "resp_0.txt", "resp_1.txt", ...
-            std::string fileName = "../storage/documents/resp_" + std::to_string(n_resp_files) + ".txt";
-
+            
             // 파일에 쓰기 위한 ofstream 생성
             if (isFirst == 0) {
                 // 첫 번째 응답은 기록하지 않고 스킵
                 LOG_INF("Skipping recording of the first response.\n");
+            } else{
+                std::string fileName = "../storage/documents/resp_" + std::to_string(n_resp_files) + ".txt";
                 std::ofstream outFile(fileName);
                 if (outFile) {
                     outFile << tokenPiece;  // tokenPiece 내용을 파일에 기록
