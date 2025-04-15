@@ -140,6 +140,7 @@ static void sigint_handler(int signo) {
 int main(int argc, char ** argv) {
     // PSG Report extraction
     ////////////////////////////////////////////////////////////////////////////////////////////////
+    std::string currTime = getCurrentTimestamp();
     const std::string queryFilePath = "../storage/documents/query.txt";
     const std::string respFilePath = "../storage/documents/resp.txt";
     std::ostringstream generated_ss;  // 모델 생성 응답만 누적 (이전에 사용하던 output_ss와는 분리)
@@ -857,11 +858,11 @@ int main(int argc, char ** argv) {
             // 파일에 쓰기 위한 ofstream 생성
             if (isFirst == 0) {
                 // 첫 번째 응답은 기록하지 않고 스킵
-                std::string folderName = "../storage/documents/resp_"+getCurrentTimestamp();
+                std::string folderName = "../storage/documents/resp_"+currTime;
                 createFolder(folderName);
                 LOG_INF("Skipping recording of the first response.\n");
             } else{
-                std::string fileName = "../storage/documents/"+ folderName +"/resp_" + std::to_string(n_resp_files) + ".txt";
+                std::string fileName = "../storage/documents/"+ currTime +"/resp_" + std::to_string(n_resp_files) + ".txt";
                 std::ofstream outFile(fileName);
                 if (outFile) {
                     outFile << tokenPiece;  // tokenPiece 내용을 파일에 기록
