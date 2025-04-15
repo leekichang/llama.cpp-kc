@@ -1040,6 +1040,9 @@ int main(int argc, char ** argv) {
                     } else {
                         LOG_ERR("Failed to open resp.txt for writing.\n");
                     }
+                    std::string tmp = '../storage/documents/resp/';
+                    deleteAllFilesInFolder(tmp);
+                    n_resp_files = 0;
                     isFirst++;  // 다음 응답도 기록될 수 있도록 업데이트
                 }
 
