@@ -166,7 +166,7 @@ static void sigint_handler(int signo) {
 int main(int argc, char ** argv) {
     // PSG Report extraction
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    std::string currTime = getCurrentTimestamp();
+    // std::string currTime = getCurrentTimestamp();
     const std::string queryFilePath = "../storage/documents/query.txt";
     const std::string respFilePath = "../storage/documents/resp.txt";
     std::ostringstream generated_ss;  // 모델 생성 응답만 누적 (이전에 사용하던 output_ss와는 분리)
