@@ -823,17 +823,21 @@ int main(int argc, char ** argv) {
             std::string fileName = "../storage/documents/resp_" + std::to_string(n_resp_files) + ".txt";
 
             // 파일에 쓰기 위한 ofstream 생성
-            std::ofstream outFile(fileName);
-            if (outFile) {
-                outFile << tokenPiece;  // tokenPiece 내용을 파일에 기록
-                outFile.close();         // 파일 닫기
-            } else {
-                // 파일을 열지 못했을 때의 예외 처리
-                std::cerr << "파일 " << fileName << " 을(를) 열 수 없습니다." << std::endl;
+            if (isFirst == 0) {
+                // 첫 번째 응답은 기록하지 않고 스킵
+                LOG_INF("Skipping recording of the first response.\n");
+                std::ofstream outFile(fileName);
+                if (outFile) {
+                    outFile << tokenPiece;  // tokenPiece 내용을 파일에 기록
+                    outFile.close();         // 파일 닫기
+                } else {
+                    // 파일을 열지 못했을 때의 예외 처리
+                    std::cerr << "파일 " << fileName << " 을(를) 열 수 없습니다." << std::endl;
+                }
+                
+                // 저장 완료 후 파일 인덱스 증가
+                ++n_resp_files;
             }
-
-            // 저장 완료 후 파일 인덱스 증가
-            ++n_resp_files;
             ///////////////////////////////////////////////////////////////////////////
 
             LOG_DBG("n_remain: %d\n", n_remain);
