@@ -1032,8 +1032,7 @@ int main(int argc, char ** argv) {
                     isFirst++;  // 이후 응답부터 기록됨.
                 } else {
                     // 응답 저장을 위해 초기화
-                    deleteAllFilesInFolder(tmp);
-                    n_resp_files = 0;
+                    
                     
                     // 두 번째 이후 응답 기록
                     std::ofstream respFile(respFilePath, std::ios::out);
@@ -1044,7 +1043,7 @@ int main(int argc, char ** argv) {
                     } else {
                         LOG_ERR("Failed to open resp.txt for writing.\n");
                     }
-                    std::string tmp = "../storage/documents/resp/";
+                    
                     isFirst++;  // 다음 응답도 기록될 수 있도록 업데이트
                 }
 
@@ -1084,6 +1083,9 @@ int main(int argc, char ** argv) {
                     auto qFileCurrentWriteTime = fs::last_write_time(queryFilePath);
                     if (qFileCurrentWriteTime != lastQueryWriteTime) {
                         // std::cout << "파일이 변경되었습니다: " << "../storage/documents/query.txt" << std::endl;
+                        std::string tmp = "../storage/documents/resp/";
+                        deleteAllFilesInFolder(tmp);
+                        n_resp_files = 0;
                         std::cout << queryFilePath << std::endl;
                         lastQueryWriteTime = qFileCurrentWriteTime;
                         std::ifstream queryFile(queryFilePath);
