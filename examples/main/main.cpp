@@ -104,7 +104,7 @@ bool createFolder(const std::string& folderName) {
     } else {
         std::cout << "Folder Exists: " << folderName << std::endl;
         std::cout << "Clean the folder." << std::endl;
-        deleteAllFilesInFolder(folderName)
+        deleteAllFilesInFolder(folderName);
         return true;
     }
 }
