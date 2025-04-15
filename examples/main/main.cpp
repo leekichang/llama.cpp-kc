@@ -68,17 +68,43 @@ static bool file_is_empty(const std::string & path) {
     return f.tellg() == 0;
 }
 
+bool deleteAllFilesInFolder(const std::string& folderPath) {
+    fs::path folder(folderPath);
+    // 폴더가 존재하는지, 디렉터리인지 확인
+    if (!fs::exists(folder)) {
+        std::cerr << "지정한 경로가 존재하지 않습니다: " << folderPath << std::endl;
+        return false;
+    }
+    if (!fs::is_directory(folder)) {
+        std::cerr << "지정한 경로가 폴더가 아닙니다: " << folderPath << std::endl;
+        return false;
+    }
+    
+    // 폴더 내부의 각 항목(파일, 서브폴더)을 순회하며 삭제 (하위 폴더도 재귀적으로 삭제)
+    for (const auto& entry : fs::directory_iterator(folder)) {
+        std::error_code ec;
+        fs::remove_all(entry, ec);  // entry 내부의 모든 파일과 폴더 삭제
+        if (ec) {
+            std::cerr << "Failed to delete: " << entry.path() << " - " << ec.message() << std::endl;
+            // 개별 항목 삭제 실패 시에도 계속 진행할 수 있도록 false 반환 대신 continue
+        }
+    }
+    return true;
+}
+
 bool createFolder(const std::string& folderName) {
     if (!fs::exists(folderName)) {
         if (fs::create_directory(folderName)) {
-            std::cout << "폴더 생성 성공: " << folderName << std::endl;
+            std::cout << "Success: " << folderName << std::endl;
             return true;
         } else {
-            std::cerr << "폴더 생성 실패: " << folderName << std::endl;
+            std::cerr << "Fail to Create the folder: " << folderName << std::endl;
             return false;
         }
     } else {
-        std::cout << "이미 폴더가 존재합니다: " << folderName << std::endl;
+        std::cout << "Folder Exists: " << folderName << std::endl;
+        std::cout << "Clean the folder." << std::endl;
+        deleteAllFilesInFolder(folderName)
         return true;
     }
 }
@@ -858,11 +884,11 @@ int main(int argc, char ** argv) {
             // 파일에 쓰기 위한 ofstream 생성
             if (isFirst == 0) {
                 // 첫 번째 응답은 기록하지 않고 스킵
-                std::string folderName = "../storage/documents/resp_"+currTime;
+                std::string folderName = "../storage/documents/resp";
                 createFolder(folderName);
                 LOG_INF("Skipping recording of the first response.\n");
             } else{
-                std::string fileName = "../storage/documents/resp_"+ currTime +"/resp_" + std::to_string(n_resp_files) + ".txt";
+                std::string fileName = "../storage/documents/resp/resp_" + std::to_string(n_resp_files) + ".txt";
                 std::ofstream outFile(fileName);
                 if (outFile) {
                     outFile << tokenPiece;  // tokenPiece 내용을 파일에 기록
@@ -1069,8 +1095,6 @@ int main(int argc, char ** argv) {
                         break;
                     }
                 }
-
-
 
                 // done taking input, reset color
                 console::set_display(console::reset);
