@@ -139,21 +139,6 @@ int main(int argc, char ** argv) {
         if (currentWriteTime != lastWriteTime) {
             std::cout << "파일이 변경되었습니다: " << filePath << std::endl;
             lastWriteTime = currentWriteTime;
-            // std::ifstream inFile(filePath);
-            // // 파일 열기에 실패했을 경우 오류 메시지 출력 후 종료
-            // if (!inFile) {
-            //     std::cerr << "파일을 열 수 없습니다: " << filePath << std::endl;
-            //     return 1;
-            // }
-
-            // // 파일의 내용을 한 줄씩 읽어와서 출력
-            // std::string line;
-            // while (std::getline(inFile, line)) {
-            //     std::cout << line << "\n";
-            // }
-
-            // // 파일 닫기
-            // inFile.close();
             break;
         }
     }
@@ -344,7 +329,6 @@ int main(int argc, char ** argv) {
                 return 1;
             }
             session_tokens.resize(n_token_count_out);
-            LOG_INF("%s: loaded a session with prompt size of %d tokens\n", __func__, (int)session_tokens.size());
         }
     }
 
@@ -628,6 +612,7 @@ int main(int argc, char ** argv) {
     int n_remain           = params.n_predict;
     int n_consumed         = 0;
     int n_session_consumed = 0;
+    int n_resp_files       = 0;
 
     std::vector<int>   input_tokens;  g_input_tokens  = &input_tokens;
     std::vector<int>   output_tokens; g_output_tokens = &output_tokens;
@@ -825,7 +810,32 @@ int main(int argc, char ** argv) {
 
             // decrement remaining sampling budget
             --n_remain;
-            generated_ss << common_token_to_piece(ctx, id, params.special);
+            // generated_ss << common_token_to_piece(ctx, id, params.special); // old ver
+            
+            ///////////////////////////////////////////////////////////////////////////
+            // Add each token
+            std::string tokenPiece = common_token_to_piece(ctx, id, params.special);
+
+            // generated_ss에 추가한다면
+            generated_ss << tokenPiece;
+
+            // 저장할 파일 이름 생성: 예) "resp_0.txt", "resp_1.txt", ...
+            std::string fileName = "resp_" + std::to_string(n_resp_files) + ".txt";
+
+            // 파일에 쓰기 위한 ofstream 생성
+            std::ofstream outFile(fileName);
+            if (outFile) {
+                outFile << tokenPiece;  // tokenPiece 내용을 파일에 기록
+                outFile.close();         // 파일 닫기
+            } else {
+                // 파일을 열지 못했을 때의 예외 처리
+                std::cerr << "파일 " << fileName << " 을(를) 열 수 없습니다." << std::endl;
+            }
+
+            // 저장 완료 후 파일 인덱스 증가
+            ++n_resp_files;
+            ///////////////////////////////////////////////////////////////////////////
+            
             LOG_DBG("n_remain: %d\n", n_remain);
         } else {
             // some user input remains from prompt or interaction, forward it to processing
