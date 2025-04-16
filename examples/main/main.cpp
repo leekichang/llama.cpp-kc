@@ -89,7 +89,7 @@ bool deleteAllFilesInFolder(const std::string& folderPath) {
             // 개별 항목 삭제 실패 시에도 계속 진행할 수 있도록 false 반환 대신 continue
         }
         else{
-            std::cerr >> "Delete Complete!" << std::endl;
+            std::cerr << "Delete Complete!" << std::endl;
         }
     }
     return true;
