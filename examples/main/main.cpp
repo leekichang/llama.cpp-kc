@@ -88,6 +88,9 @@ bool deleteAllFilesInFolder(const std::string& folderPath) {
             std::cerr << "Failed to delete: " << entry.path() << " - " << ec.message() << std::endl;
             // 개별 항목 삭제 실패 시에도 계속 진행할 수 있도록 false 반환 대신 continue
         }
+        else{
+            std::cerr >> "Delete Complete!" << std::endl;
+        }
     }
     return true;
 }
