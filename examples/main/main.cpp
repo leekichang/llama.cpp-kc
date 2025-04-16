@@ -88,9 +88,6 @@ bool deleteAllFilesInFolder(const std::string& folderPath) {
             std::cerr << "Failed to delete: " << entry.path() << " - " << ec.message() << std::endl;
             // 개별 항목 삭제 실패 시에도 계속 진행할 수 있도록 false 반환 대신 continue
         }
-        else{
-            std::cerr << "Delete Complete!" << std::endl;
-        }
     }
     return true;
 }
@@ -1086,10 +1083,10 @@ int main(int argc, char ** argv) {
                     auto qFileCurrentWriteTime = fs::last_write_time(queryFilePath);
                     if (qFileCurrentWriteTime != lastQueryWriteTime) {
                         // std::cout << "파일이 변경되었습니다: " << "../storage/documents/query.txt" << std::endl;
-                        std::string tmp = "../storage/documents/resp/";
-                        deleteAllFilesInFolder(tmp);
-                        std::string fin_resp = "../storage/documents/resp.txt";
-                        fs::remove(fin_resp);
+                        // std::string tmp = "../storage/documents/resp/";
+                        // deleteAllFilesInFolder(tmp);
+                        // std::string fin_resp = "../storage/documents/resp.txt";
+                        // fs::remove(fin_resp);
                         n_resp_files = 0;
                         std::cout << queryFilePath << std::endl;
                         lastQueryWriteTime = qFileCurrentWriteTime;
